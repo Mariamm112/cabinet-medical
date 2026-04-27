@@ -78,4 +78,13 @@ class AppointmentController extends Controller
 
     return view('appointments.partials.results', compact('appointments'))->render();
 }
+public function apiIndex()
+{
+    return response()->json(Appointment::all());
+}
+
+public function apiStore(Request $request)
+{
+    return Appointment::create($request->all());
+}
 }
