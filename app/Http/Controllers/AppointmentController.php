@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use illuminate\mail\Mailable;
+use App\Models\Appointment;
+use App\Mail\AppointmentCreated;
 
 class AppointmentController extends Controller
 {
@@ -32,6 +35,8 @@ class AppointmentController extends Controller
         'service_id' => $request->service_id,
         'appointment_date' => $request->appointment_date,
     ]);
+      $user = auth()->user();
+    Mail::to($user->email)->send(new AppointmentCreated($appointment));
 
     return redirect()->back();
 }
