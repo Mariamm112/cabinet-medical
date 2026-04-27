@@ -18,7 +18,11 @@ class AppointmentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            
+        'user_id' => \App\Models\User::factory(),
+        'service_id' => \App\Models\Service::factory(),
+        'appointment_date' => fake()->dateTimeBetween('+1 days', '+1 month'),
+        'status' => 'pending'
         ];
     }
 }
