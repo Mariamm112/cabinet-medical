@@ -10,9 +10,9 @@ class AppointmentController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
-    }
+{
+    return view('appointments.index');
+}
 
     /**
      * Show the form for creating a new resource.
@@ -67,4 +67,10 @@ class AppointmentController extends Controller
     {
         //
     }
+    public function search(Request $request)
+{
+    $appointments = Appointment::where('status', 'like', "%{$request->q}%")->get();
+
+    return view('appointments.partials.results', compact('appointments'))->render();
+}
 }
