@@ -1,0 +1,9 @@
+<?php
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\AppointmentController;
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/appointments', [AppointmentController::class, 'apiIndex']);
+    Route::post('/appointments', [AppointmentController::class, 'apiStore']);
+});
