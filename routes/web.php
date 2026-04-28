@@ -1,32 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Dashboard
 Route::get('/dashboard', function () {
-    $totalAppointments = \App\Models\Appointment::count();
-    $pendingAppointments = \App\Models\Appointment::where('status', 'pending')->count();
-    $confirmedAppointments = \App\Models\Appointment::where('status', 'confirmed')->count();
-    $recentAppointments = \App\Models\Appointment::with('service')->latest()->take(5)->get();
-    
-    return view('dashboard', compact('totalAppointments', 'pendingAppointments', 'confirmedAppointments', 'recentAppointments'));
-})->name('dashboard');
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-// Appointments
-Route::resource('appointments', AppointmentController::class);
-Route::get('/appointments/search', [AppointmentController::class, 'search'])
-    ->name('appointments.search');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-// Services
-Route::resource('services', ServiceController::class);
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->name('logout');
+require __DIR__.'/auth.php';
